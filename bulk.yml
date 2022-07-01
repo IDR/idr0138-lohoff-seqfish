@@ -1,0 +1,9 @@
+---
+path: "filePaths.tsv"
+continue: true
+transfer: "ln_s"
+parallel_upload: "10"
+parallel_fileset: "10"
+columns:
+  - target
+  - path
