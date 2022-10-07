@@ -1,8 +1,0 @@
----
-continue: true
-transfer: "ln_s"
-columns:
-  - target
-  - path
-  - name
-
