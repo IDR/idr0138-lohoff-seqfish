@@ -4,6 +4,7 @@ from omero.cli import cli_login
 from omero.gateway import BlitzGateway
 from omero_rois import mask_from_binary_image
 from omero.rtypes import rstring
+import zarr
 
 
 PROJECT = "idr0138-lohoff-seqfish/experimentA"
@@ -18,24 +19,6 @@ def get_images(conn):
             if "labels" in image.name:
                 continue
             yield dataset, image
-
-
-def get_cells_image(dataset, image):
-    name = image.name.replace("[0]", "[labels/cells/0]")
-    for child in dataset.listChildren():
-        if child.name == name:
-            return child
-    logging.warning(f"Could not find {name} for {image.name}")
-    return None
-
-
-def get_nuclei_image(dataset, image):
-    name = image.name.replace("[0]", "[labels/nuclei/0]")
-    for child in dataset.listChildren():
-        if child.name == name:
-            return child
-    logging.warning(f"Could not find {name} for {image.name}")
-    return None
 
 
 def save_rois(conn, im, rois):
@@ -69,15 +52,15 @@ def masks_from_label_image(
     return masks
 
 
-def create_rois(img, is_nuclei):
-    zct_list = []
-    for z in range(0, img.getSizeZ()):
-        zct_list.append((z, 0, 0))
-    planes = img.getPrimaryPixels().getPlanes(zct_list)
+def create_rois(img_data, is_nuclei):
+    
+    # assume zyx dimensions
+    size_z = img_data.shape[0]
 
     rois = []
     if is_nuclei:
-        for i, plane in enumerate(planes):
+        for i in range(size_z):
+            plane = img_data[i]
             print(f"Nuclei plane {i}")
             mask = mask_from_binary_image(plane == 2, RGBA, i, None, None, "Nucleis", False)
             if mask:
@@ -90,7 +73,8 @@ def create_rois(img, is_nuclei):
                 logging.warning(f"Found NO nuclei masks for plane {i}")
     else:
         rois_map = {}
-        for i, plane in enumerate(planes):
+        for i in range(size_z):
+            plane = img_data[i]
             print(f"Cell plane {i}")
             plane_masks = masks_from_label_image(plane, rgba=RGBA, z=i, c=None, t=None, text="Cell ")
             if plane_masks:
@@ -112,6 +96,18 @@ def create_rois(img, is_nuclei):
     return rois
 
 
+def get_labels_data(image, name):
+    # Find path/to/labels/cell/0 highest resolution of cells image
+    path_to_zarr = None
+    for orig_file in image.getFileset().listFiles():
+        if orig_file.path.endswith(f".zarr/labels/{name}/0/"):
+            path_to_zarr = orig_file.path
+    if path_to_zarr is None:
+        logging.warning(f"Could not find {name} for {image.name}")
+        return None
+    return zarr.open(path_to_zarr)
+
+
 def main():
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s [%(pathname)s, %(lineno)s]')
     with cli_login() as c:
@@ -121,13 +117,13 @@ def main():
                 logging.info(f"Processing {im.name}")
                 if not DRYRUN:
                     delete_rois(conn, im)
-                cells_im = get_cells_image(ds, im)
+                cells_data = get_labels_data(im, "cells")
                 rois = []
-                if cells_im is not None:
-                    rois.extend(create_rois(cells_im, False))
-                nuc_im = get_nuclei_image(ds, im)
-                if nuc_im is not None:
-                    rois.extend(create_rois(nuc_im, True))
+                if cells_data is not None:
+                    rois.extend(create_rois(cells_data, False))
+                nuc_data = get_labels_data(im, "nuclei")
+                if nuc_data is not None:
+                    rois.extend(create_rois(nuc_data, True))
                 if not DRYRUN and len(rois) > 0:
                     save_rois(conn, im, rois)
             except Exception as e:
