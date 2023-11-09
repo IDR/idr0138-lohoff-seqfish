@@ -6,13 +6,12 @@ from omero.gateway import BlitzGateway
 from omero_rois import mask_from_binary_image
 from omero.rtypes import rstring
 import zarr
-from skimage.transform import rescale
+from skimage.transform import resize
 
 
 PROJECT = "idr0138-lohoff-seqfish/experimentA"
 RGBA = (255, 255, 0, 128)
 DRYRUN = False
-SCALE = 4
 
 
 def get_images(conn):
@@ -45,22 +44,23 @@ def delete_rois(conn, im):
         conn.deleteObjects("Roi", to_delete, deleteChildren=True, wait=True)
 
 
-def scale_mask_from_binary_image(bin_img, scale, rgba, z, c, t, text, raise_on_no_mask):
-    scaled_img = rescale(bin_img, scale)
+def scale_mask_from_binary_image(bin_img, size_x, size_y, rgba, z, c, t, text, raise_on_no_mask):
+    # we want to resize the BINARY image since this avoids interpolation etc.
+    scaled_img = resize(bin_img, (size_y, size_x))
     return mask_from_binary_image(scaled_img, rgba, z, c, t, text, raise_on_no_mask)
 
 
 def masks_from_label_image(
-        labelim, rgba=None, z=None, c=None, t=None, text=""):
+        labelim, size_x, size_y, rgba=None, z=None, c=None, t=None, text=""):
     masks = {}
     for i in range(1, labelim.max() + 1):
-        mask = scale_mask_from_binary_image(labelim == i, SCALE, rgba, z, c, t, f"{text}{i}",
+        mask = scale_mask_from_binary_image(labelim == i, size_x, size_y, rgba, z, c, t, f"{text}{i}",
                                       False)
         masks[i] = mask
     return masks
 
 
-def create_rois(img_data, is_nuclei):
+def create_rois(img_data, size_x, size_y, is_nuclei):
     
     # assume zyx dimensions
     size_z = img_data.shape[0]
@@ -70,7 +70,7 @@ def create_rois(img_data, is_nuclei):
         for i in range(size_z):
             plane = img_data[i]
             print(f"Nuclei plane {i}")
-            mask = scale_mask_from_binary_image(plane == 2, SCALE, RGBA, i, None, None, "Nucleis", False)
+            mask = scale_mask_from_binary_image(plane == 2, size_x, size_y, RGBA, i, None, None, "Nucleis", False)
             if mask:
                 logging.info(f"Found nuclei masks for plane {i}")
                 roi = omero.model.RoiI()
@@ -84,7 +84,7 @@ def create_rois(img_data, is_nuclei):
         for i in range(size_z):
             plane = img_data[i]
             print(f"Cell plane {i}")
-            plane_masks = masks_from_label_image(plane, rgba=RGBA, z=i, c=None, t=None, text="Cell ")
+            plane_masks = masks_from_label_image(plane, size_x, size_y, rgba=RGBA, z=i, c=None, t=None, text="Cell ")
             if plane_masks:
                 logging.info(f"Found cell masks for plane {i}")
             else:
@@ -121,6 +121,8 @@ def main():
     with cli_login() as c:
         conn = omero.gateway.BlitzGateway(client_obj=c.get_client())
         for ds, im in get_images(conn):
+            size_y = im.getSizeY()
+            size_x = im.getSizeX()
             try:
                 logging.info(f"Processing Image: {im.id} {im.name}")
                 if not DRYRUN:
@@ -128,10 +130,10 @@ def main():
                 cells_data = get_labels_data(im, "cells")
                 rois = []
                 if cells_data is not None:
-                    rois.extend(create_rois(cells_data, False))
+                    rois.extend(create_rois(cells_data, size_x, size_y, False))
                 nuc_data = get_labels_data(im, "nuclei")
                 if nuc_data is not None:
-                    rois.extend(create_rois(nuc_data, True))
+                    rois.extend(create_rois(nuc_data, size_x, size_y, True))
                 if not DRYRUN and len(rois) > 0:
                     save_rois(conn, im, rois)
             except Exception as e:
