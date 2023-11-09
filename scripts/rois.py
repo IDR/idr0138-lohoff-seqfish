@@ -1,5 +1,6 @@
 import logging
 import os
+from random import randrange
 import omero
 from omero.cli import cli_login
 from omero.gateway import BlitzGateway, DatasetWrapper
@@ -10,7 +11,7 @@ from skimage.transform import resize
 
 
 PROJECT = "idr0138-lohoff-seqfish/experimentA"
-RGBA = (255, 255, 0, 128)
+RGBA = (255, 255, 255, 128)
 DRYRUN = False
 
 
@@ -87,6 +88,8 @@ def delete_rois(conn, im):
 def scale_mask_from_binary_image(bin_img, size_x, size_y, rgba, z, c, t, text, raise_on_no_mask):
     # we want to resize the BINARY image since this avoids interpolation etc.
     scaled_img = resize(bin_img, (size_y, size_x))
+    if rgba is None:
+        rgba = [randrange(256), randrange(256), randrange(256), 128]
     return mask_from_binary_image(scaled_img, rgba, z, c, t, text, raise_on_no_mask)
 
 
@@ -124,7 +127,7 @@ def create_rois(img_data, size_x, size_y, is_nuclei):
         for i in range(size_z):
             plane = img_data[i]
             print(f"Cell plane {i}")
-            plane_masks = masks_from_label_image(plane, size_x, size_y, rgba=RGBA, z=i, c=None, t=None, text="Cell ")
+            plane_masks = masks_from_label_image(plane, size_x, size_y, rgba=None, z=i, c=None, t=None, text="Cell ")
             if plane_masks:
                 logging.info(f"Found cell masks for plane {i}")
             else:
