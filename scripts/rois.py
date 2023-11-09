@@ -1,15 +1,18 @@
 import logging
+import os
 import omero
 from omero.cli import cli_login
 from omero.gateway import BlitzGateway
 from omero_rois import mask_from_binary_image
 from omero.rtypes import rstring
 import zarr
+from skimage.transform import rescale
 
 
 PROJECT = "idr0138-lohoff-seqfish/experimentA"
 RGBA = (255, 255, 0, 128)
 DRYRUN = False
+SCALE = 4
 
 
 def get_images(conn):
@@ -42,11 +45,16 @@ def delete_rois(conn, im):
         conn.deleteObjects("Roi", to_delete, deleteChildren=True, wait=True)
 
 
+def scale_mask_from_binary_image(bin_img, scale, rgba, z, c, t, text, raise_on_no_mask):
+    scaled_img = rescale(bin_img, scale)
+    return mask_from_binary_image(scaled_img, rgba, z, c, t, text, raise_on_no_mask)
+
+
 def masks_from_label_image(
         labelim, rgba=None, z=None, c=None, t=None, text=""):
     masks = {}
     for i in range(1, labelim.max() + 1):
-        mask = mask_from_binary_image(labelim == i, rgba, z, c, t, f"{text}{i}",
+        mask = scale_mask_from_binary_image(labelim == i, SCALE, rgba, z, c, t, f"{text}{i}",
                                       False)
         masks[i] = mask
     return masks
@@ -62,7 +70,7 @@ def create_rois(img_data, is_nuclei):
         for i in range(size_z):
             plane = img_data[i]
             print(f"Nuclei plane {i}")
-            mask = mask_from_binary_image(plane == 2, RGBA, i, None, None, "Nucleis", False)
+            mask = scale_mask_from_binary_image(plane == 2, SCALE, RGBA, i, None, None, "Nucleis", False)
             if mask:
                 logging.info(f"Found nuclei masks for plane {i}")
                 roi = omero.model.RoiI()
@@ -82,7 +90,7 @@ def create_rois(img_data, is_nuclei):
             else:
                 logging.warning(f"Found NO cell masks for plane {i}")
             for cell_index, mask in plane_masks.items():
-                if mask.getBytes().any():
+                if mask is not None and mask.getBytes().any():
                     if cell_index not in rois_map:
                         roi = omero.model.RoiI()
                         roi.setName(rstring(f"Cell {cell_index}"))
@@ -98,14 +106,14 @@ def create_rois(img_data, is_nuclei):
 
 def get_labels_data(image, name):
     # Find path/to/labels/cell/0 highest resolution of cells image
-    path_to_zarr = None
-    for orig_file in image.getFileset().listFiles():
-        if orig_file.path.endswith(f".zarr/labels/{name}/0/"):
-            path_to_zarr = orig_file.path
-    if path_to_zarr is None:
-        logging.warning(f"Could not find {name} for {image.name}")
+    cps = image.getImportedImageFilePaths()["client_paths"]
+    path_to_zarr = cps[0].split(".zarr")[0]
+    labels_path = f"/{path_to_zarr}.zarr/labels/{name}/0/"
+    if os.path.exists(labels_path):
+        return zarr.open(labels_path)
+    else:
+        logging.warning(f"Could not find {labels_path} for {image.name}")
         return None
-    return zarr.open(path_to_zarr)
 
 
 def main():
@@ -114,7 +122,7 @@ def main():
         conn = omero.gateway.BlitzGateway(client_obj=c.get_client())
         for ds, im in get_images(conn):
             try:
-                logging.info(f"Processing {im.name}")
+                logging.info(f"Processing Image: {im.id} {im.name}")
                 if not DRYRUN:
                     delete_rois(conn, im)
                 cells_data = get_labels_data(im, "cells")
