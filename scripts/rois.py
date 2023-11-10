@@ -112,7 +112,6 @@ def create_rois(img_data, size_x, size_y, is_nuclei):
     if is_nuclei:
         for i in range(size_z):
             plane = img_data[i]
-            print(f"Nuclei plane {i}")
             mask = scale_mask_from_binary_image(plane == 2, size_x, size_y, RGBA, i, None, None, "Nuclei", False)
             if mask:
                 logging.info(f"Found nuclei masks for plane {i}")
@@ -123,25 +122,21 @@ def create_rois(img_data, size_x, size_y, is_nuclei):
             else:
                 logging.warning(f"Found NO nuclei masks for plane {i}")
     else:
-        rois_map = {}
         for i in range(size_z):
             plane = img_data[i]
-            print(f"Cell plane {i}")
             plane_masks = masks_from_label_image(plane, size_x, size_y, rgba=None, z=i, c=None, t=None, text="Cell ")
             if plane_masks:
                 logging.info(f"Found cell masks for plane {i}")
             else:
                 logging.warning(f"Found NO cell masks for plane {i}")
-            for cell_index, mask in plane_masks.items():
+            for cell_id, mask in plane_masks.items():
+                # The cell_ids (label pixel values) aren't consistent across Z-sections (2D-segmentation instead of 3D)
+                # We can't create 3D ROIs with multiple shapes. Just a single mask in each ROI...
                 if mask is not None and mask.getBytes().any():
-                    if cell_index not in rois_map:
-                        roi = omero.model.RoiI()
-                        roi.setName(rstring(f"Cell {cell_index}"))
-                        rois_map[cell_index] = roi
-                    else:
-                        roi = rois_map[cell_index]
+                    roi = omero.model.RoiI()
+                    roi.setName(rstring(f"Cell {cell_id}"))
                     roi.addShape(mask)
-        rois = list(rois_map.values())
+                    rois.append(roi)
 
     logging.info("{} rois created.".format(len(rois)))
     return rois
@@ -181,8 +176,8 @@ def main():
                     save_rois(conn, im, rois)
 
                 # Create new Image
-                if nuc_data is not None or cells_data is not None:
-                    create_image(conn, cells_data, nuc_data, im.name, ds)
+                # if nuc_data is not None or cells_data is not None:
+                #     create_image(conn, cells_data, nuc_data, im.name, ds)
             except Exception as e:
                 logging.warning(e)
 
