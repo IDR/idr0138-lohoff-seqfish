@@ -27,10 +27,6 @@ columns:
     clientname: Developmental Stage
     include: yes
 
-  - name: Channels
-    clientname: Channels
-    include: yes
-
 
   ######################################################################
   # mapr groups
