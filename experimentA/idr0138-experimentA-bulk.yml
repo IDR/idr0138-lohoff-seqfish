@@ -1,5 +1,5 @@
 ---
-path: "idr0138-experimentA-filePaths_sample.tsv"
+path: "idr0138-experimentA-filePaths.tsv"
 continue: true
 transfer: "ln_s"
 columns:
