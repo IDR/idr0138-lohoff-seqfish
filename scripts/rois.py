@@ -85,6 +85,13 @@ def delete_rois(conn, im):
         conn.deleteObjects("Roi", to_delete, deleteChildren=True, wait=True)
 
 
+def has_rois(conn, im):
+    result = conn.getRoiService().findByImage(im.id, None)
+    if result.rois:
+        return True
+    return False
+
+
 def scale_mask_from_binary_image(bin_img, size_x, size_y, rgba, z, c, t, text, raise_on_no_mask):
     # we want to resize the BINARY image since this avoids interpolation etc.
     scaled_img = resize(bin_img, (size_y, size_x))
@@ -163,8 +170,11 @@ def main():
             size_x = im.getSizeX()
             try:
                 logging.info(f"Processing Image: {im.id} {im.name}")
-                if not DRYRUN:
-                    delete_rois(conn, im)
+                #if not DRYRUN:
+                #    delete_rois(conn, im)
+                if has_rois(conn, im):
+                    logging.info("Skipping, already has ROIs.")
+                    continue
                 cells_data = get_labels_data(im, "cells")
                 rois = []
                 if cells_data is not None:
