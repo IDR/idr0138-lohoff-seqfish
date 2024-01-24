@@ -1,0 +1,33 @@
+---
+channels:
+    1:
+        active: true
+        color: FF0000
+        end: 800.0
+        label: A647
+        max: 4202.0
+        min: 150.0
+        start: 250.0
+    2:
+        active: true
+        color: 00FF00
+        end: 250.0
+        label: A488
+        max: 4002.0
+        min: 35.0
+        start: 130.0
+    3:
+        active: true
+        color: 0000FF
+        end: 800.0
+        label: Cy3B
+        max: 4237.0
+        min: 87.0
+        start: 150.0
+    4:
+        active: false
+        color: FFFFFF
+        label: DAPI
+greyscale: false
+t: 1
+version: 2
