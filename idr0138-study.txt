@@ -26,7 +26,7 @@ Study Public Release Date
 # Study Publication																																	
 Study PubMed ID	34489600
 Study Publication Title	Integration of spatial and single-cell transcriptomic data elucidates mouse organogenesis
-Study Author List	T. Lohoff, S. Ghazanfar, A. Missarova, N. Koulena, N. Pierson, J. A. Griffiths, E. S. Bardot, C.-H. L. Eng, R. C. V. Tyser, R. Argelaguet, C. Guibentif, S. Srinivas, J. Briscoe, B. D. Simons, A.-K. Hadjantonakis, B. Göttgens, W. Reik, J. Nichols, L. Cai & J. C. Marioni
+Study Author List	Lohoff T, Ghazanfar S, Missarova A, Koulena N, Pierson N, Griffiths JA, Bardot ES, Eng CHL, Tyser RCV, Argelaguet R, Guibentif C, Srinivas S, Briscoe J, Simons BD, Hadjantonakis AK, Göttgens B, Reik W, Nichols J, Cai L, Marioni JC
 Study PMC ID	PMC8763645
 Study DOI	https://doi.org/10.1038/s41587-021-01006-2
 																																	
