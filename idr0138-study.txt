@@ -1,0 +1,173 @@
+# FILL IN AS MUCH INFORMATION AS YOU CAN.  HINTS HAVE BEEN PUT IN SOME FIELDS AFTER THE HASH # SYMBOL. REPLACE THE HINT WITH TEXT WHERE APPROPRIATE.	
+# STUDY DESCRIPTION SECTION																																	
+# Section with generic information about the study including title, description, publication details (if applicable) and contact details											
+																																	
+Comment[IDR Study Accession]	idr0138																																
+Study Title	Integration of spatial and single-cell transcriptomic data elucidates mouse organogenesis
+Study Type	seqFISH																																
+Study Type Term Source REF	EFO																																
+Study Type Term Accession	EFO_0008991																																
+Study Description	Molecular profiling of single cells has advanced our knowledge of the molecular basis of development. However, current approaches mostly rely on dissociating cells from tissues, thereby losing the crucial spatial context of regulatory processes. Here, we apply an image-based single-cell transcriptomics method, sequential fluorescence in situ hybridization (seqFISH), to detect mRNAs for 387 target genes in tissue sections of mouse embryos at the 8–12 somite stage. By integrating spatial context and multiplexed transcriptional measurements with two single-cell transcriptome atlases, we characterize cell types across the embryo and demonstrate that spatially resolved expression of genes not profiled by seqFISH can be imputed. We use this high-resolution spatial map to characterize fundamental steps in the patterning of the midbrain–hindbrain boundary (MHB) and the developing gut tube. We uncover axes of cell differentiation that are not apparent from single-cell RNA-sequencing (scRNA-seq) data, such as early dorsal–ventral separation of esophageal and tracheal progenitor populations in the gut tube. Our method provides an approach for studying cell fate decisions in complex tissues and development.
+
+Study Key Words	seqFISH	mouse organogenesis	development	multiplexed RNA	barcoded gene expression	
+																		
+Study Organism	Mus musculus	
+Study Organism Term Source REF	NCBITaxon																																
+Study Organism Term Accession	10090																															
+Study Experiments Number	1
+
+Study External URL	https://marionilab.cruk.cam.ac.uk/SpatialMouseAtlas
+
+Study BioImage Archive Accession
+
+Study Public Release Date
+
+
+# Study Publication																																	
+Study PubMed ID	34489600
+Study Publication Title	Integration of spatial and single-cell transcriptomic data elucidates mouse organogenesis
+Study Author List	T. Lohoff, S. Ghazanfar, A. Missarova, N. Koulena, N. Pierson, J. A. Griffiths, E. S. Bardot, C.-H. L. Eng, R. C. V. Tyser, R. Argelaguet, C. Guibentif, S. Srinivas, J. Briscoe, B. D. Simons, A.-K. Hadjantonakis, B. Göttgens, W. Reik, J. Nichols, L. Cai & J. C. Marioni
+Study PMC ID	PMC8763645
+Study DOI	https://doi.org/10.1038/s41587-021-01006-2
+																																	
+# Study Contacts																																	
+Study Person Last Name	Ghazanfar																
+Study Person First Name	Shila																																
+Study Person Email	shila.ghazanfar@sydney.edu.au
+Study Person Address	The University of Sydney, Camperdown, New South Wales, 2006, AUSTRALIA
+Study Person ORCID	0000-0001-7861-6997
+Study Person Roles	submitter																																
+																																	
+# Study License and Data DOI																																	
+Study License	CC BY 4.0	
+Study License URL	https://creativecommons.org/licenses/by/4.0/																																
+Study Copyright	Lohoff et al
+Study Data Publisher	University of Dundee																																
+Study Data DOI																																	
+																																	
+Term Source Name	NCBITaxon	EFO	CMPO	FBbi																													
+Term Source URI	http://purl.obolibrary.org/obo/	http://www.ebi.ac.uk/efo/	http://www.ebi.ac.uk/cmpo/	http://purl.obolibrary.org/obo/																													
+																																	
+																																	
+# EXPERIMENT SECTION																																	
+# Experiment Section containing all information relative to each experiment in the study including materials used, protocols names and description, phenotype names and description. For multiple experiments this section should be repeated.  Copy and paste the whole section below and fill out for the next experiment																		
+																																	
+Experiment Number	1
+
+Comment[IDR Experiment Name]	idr0138-lohoff-seqfish/experimentA	
+Experiment Sample Type	tissue																															
+Experiment Description	seqFISH study of sagittal sections of mouse embryos at 8-10 somite stage. An additional round of hybridisation to capture cell membrane is performed to accurately segment cell boundaries.																								
+Experiment Size	5D Images: 	Average Image Dimension (XYZCT):	Total Tb: 	0.5
+
+Experiment Example Images																															
+Experiment Imaging Method	spinning disk confocal microscopy
+
+Experiment Imaging Method Term Source REF	Fbbi																																
+Experiment Imaging Method Term Accession	FBbi_00000253
+Experiment Organism
+Experiment Organism Term Source REF	NCBITaxon																																
+Experiment Organism Term Accession																																	
+Experiment Comments	seqFISH imaging.  Additional files include field of view (fov) information for the entire sample, low-resolution brightfield image of entire sample, and barcoding information for each hybridisation and channel.																						
+																																	
+# assay files																																	
+Experiment Assay File	idr0138-experimentA-annotation
+
+Experiment Assay File Format	tab-delimited text																																
+Assay Experimental Conditions	WT
+
+Assay Experimental Conditions Term Source REF																																	
+Assay Experimental Conditions Term Accession																																
+Quality Control Description	Additional imaging rounds before and after hybridisation, including a repeat of HybCycle_0 to assess maintaining of data quality.																									
+																																	
+# Protocols																																	
+Protocol Name	growth protocol	treatment protocol	image acquisition and feature extraction protocol	data analysis protocol																													
+Protocol Type	growth protocol	treatment protocol	image acquisition and feature extraction protocol	data analysis protocol																													
+Protocol Type Term Source REF	EFO	EFO																															
+Protocol Type Term Accession	EFO_0003789	EFO_0003969																															
+Protocol Description	
+																													
+																																	
+# Phenotypes																																	
+Phenotype Name																																	
+Phenotype Description																																	
+Phenotype Score Type																																	
+Phenotype Term Source REF	CMPO																																
+Phenotype Term Name																																	
+Phenotype Term Accession			 																														
+																																	
+																																	
+# Feature Level Data Files (give individual file details unless there is one file per well)																																	
+Feature Level Data File Name	HybCycle_readouts.xlsx
+
+Feature Level Data File Format	Excel
+
+Feature Level Data File Description	Description of each Hybridisation Cycle and corresponding Readout image round.																											
+Feature Level Data Column Name	HybCycle	Description	Readout
+
+Feature Level Data Column Description	Hybridisation Cycle, Description of the type of imaging performed in the hybridisation cycle, readout ID for quantitative images.
+													
+Feature Level Data File Name	Supplementary_Table_2_barcoding_decoding_SG.xlsx																																
+Feature Level Data File Format	Excel (multisheet)																															
+Feature Level Data File Description	Barcoding schema for seqFISH imaging. Matching table between HybCycle and Channel to Readout probe ID, specification of readout probe sequence, barcoded pseudocolour assignment of each gene to the four barcoding rounds, and readout probe assignment for each gene and hybridisation.
+
+Feature Level Data Column Name	ID	HybCycle	Channel	Channel Number	Readout_sequence	Barcoded_Hyb	Pseudocolors;	ID	Hyb1_pseudocolour	Hyb2_pseudocolour	Hyb3_pseudocolour	Hyb4_pseudocolour;	ID	Hyb1_readout_sequence	Hyb2_readout_sequence	Hyb3_readout_sequence	Hyb4_readout_sequence														
+Feature Level Data Column Description	Readout ID,	Hybridisation Cycle number, Channel colour value, Channel Number in image,	Readout_sequence,	Barcoded hybridisation number out of 4, Pseudocolor value out of 12;	Gene ID,	Hyb1_pseudocolour out of 12,	Hyb2_pseudocolour out of 12,	Hyb3_pseudocolour out of 12,	Hyb4_pseudocolour out of 12;	Gene ID,	Hyb1 readout sequence,	Hyb2 readout sequence,	Hyb3 readout sequence,	Hyb4 readout sequence								
+													
+Feature Level Data File Name	Sequential_readout-ID_v3_TL_ID_SG.csv
+
+Feature Level Data File Format	csv
+
+Feature Level Data File Description	Schema for single molecule FISH rounds following seqFISH.																						
+Feature Level Data Column Name	<NAME>	Readout	Readout_sequence	15nt_color	HybCycle	Channel
+
+Feature Level Data Column Description	Gene name, Readout ID, Readout sequence, Channel color value, Hybridisation Cycle, Channel number for Hybridisation cycle.
+
+Feature Level Data File Name	TimEmbryos-102219/fovinfo.csv
+
+Feature Level Data File Format	csv
+
+Feature Level Data File Description	Table of relative positions of fields of view in physical space.
+
+Feature Level Data Column Name	 fov	x	y	bound_x_1	bound_x_2	bound_x_3	bound_x_4	bound_y_1	bound_y_2	bound_y_3	bound_y_4
+
+Feature Level Data Column Description	field of view ID (fov1 = Pos0),	x centroid,	y centroid,	four corners of bounding box x-coordinate, four corners of bounding box y-coordinate.
+
+Feature Level Data File Name	TimEmbryos-120919/fovinfo.csv
+
+Feature Level Data File Format	csv
+
+Feature Level Data File Description	Table of relative positions of fields of view in physical space.
+
+Feature Level Data Column Name	 fov	x	y	bound_x_1	bound_x_2	bound_x_3	bound_x_4	bound_y_1	bound_y_2	bound_y_3	bound_y_4
+
+Feature Level Data Column Description	field of view ID (fov1 = Pos0),	x centroid,	y centroid,	four corners of bounding box x-coordinate, four corners of bounding box y-coordinate.
+
+Feature Level Data File Name	TimEmbryos-120919/Slide Explorer.tif
+
+Feature Level Data File Format	tif
+
+Feature Level Data File Description	Low resolution brightfield image of entire slide.
+
+Feature Level Data Column Name	 
+
+Feature Level Data Column Description	
+
+Feature Level Data File Name	TimEmbryos-102219/Slide Explorer.tif
+
+Feature Level Data File Format	tif
+
+Feature Level Data File Description	Low resolution brightfield image of entire slide.
+
+Feature Level Data Column Name	 
+
+Feature Level Data Column Description	
+																																	
+#  Processed Data Files 																																	
+Processed Data File Name																																	
+Processed Data File Format	tab-delimited text																																
+Processed Data File Description																																	
+Processed Data Column Name																																
+Processed Data Column Type																																	
+Processed Data Column Annotation Level																																
+Processed Data Column Description																													
+Processed Data Column Link To Assay File	
