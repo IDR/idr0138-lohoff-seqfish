@@ -4,11 +4,16 @@ import os
 import omero.cli
 from omero.gateway import BlitzGateway
 
+"""
+Creates a cellData and segmentedData csv for each dataset, which includes the image, roi and shape ids.
+Attach these later with: omero metadata populate Dataset:123 --allow_nan --file xyz.csv
+"""
+
 DS_0 = "TimEmbryos-102219"
 DS_1 = "TimEmbryos-120919"
 
 PROCESSED_FILE_DIR = "../processed_files"
-OUT_DIR = "../processed_files_finished"
+OUT_DIR = "../processed_files_with_ids"
 
 PROJECT_NAME = "idr0138-lohoff-seqfish/experimentA"
 

@@ -2,6 +2,11 @@ import csv
 import os
 import re
 
+"""
+Combines the submitted csv files into one cellData and one segmentedData csv
+for each of the two dataset types TimEmbryos-102219 and TimEmbryos-120919
+"""
+
 PROCESSED_FILE_DIR = "../processed_files"
 
 DS_0 = "TimEmbryos-102219"
