@@ -88,7 +88,7 @@ with omero.cli.cli_login() as c:
                     row['Image'] = images[img_name].getId()
 
                     roi_name = f"Cell {row['cellID']}"
-                    z_plane = int(row['z'])
+                    z_plane = int(row['z'])-1
                     roi_id, shape_id, roi_cache[img_name] = get_roi_id(conn, images[img_name], z_plane, roi_name, roi_cache[img_name])
                     if not roi_id:
                         print(f"Can't find {roi_name} for {img_name}")
