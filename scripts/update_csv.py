@@ -1,5 +1,6 @@
 import csv
 import os
+import sys
 
 import omero.cli
 from omero.gateway import BlitzGateway
@@ -9,8 +10,8 @@ Creates a cellData and segmentedData csv for each dataset, which includes the im
 Attach these later with: omero metadata populate Dataset:123 --allow_nan --file xyz.csv
 """
 
-DS_0 = "TimEmbryos-102219"
-DS_1 = "TimEmbryos-120919"
+DS = "TimEmbryos-102219"
+# DS = "TimEmbryos-120919"
 
 PROCESSED_FILE_DIR = "../processed_files"
 OUT_DIR = "../processed_files_with_ids"
@@ -21,6 +22,9 @@ HEADER_CELL = "# header image,roi,l,s,l,d,d,d,d,l,l,l,l"
 HEADER_SEG = "# header image,roi,l,s,l,s,l,d,d,l,l,l"
 
 def get_reader(ds, is_cell):
+    if ds != "TimEmbryos-102219" and ds != "TimEmbryos-120919":
+        print("Dataset has to be either TimEmbryos-102219 or TimEmbryos-120919")
+        sys.exit(1)
     if is_cell:
         filename = f"{PROCESSED_FILE_DIR}/{ds}-cellData-processed.csv"
     else:
@@ -48,10 +52,8 @@ with omero.cli.cli_login() as c:
     project = conn.getObject("Project", attributes={"name": PROJECT_NAME})
     for cell in True, False:
         for dataset in project.listChildren():
-            if DS_0 in dataset.getName():
-                ifile, reader = get_reader(DS_0, cell)
-            elif DS_1 in dataset.getName():
-                ifile, reader = get_reader(DS_1, cell)
+            if DS in dataset.getName():
+                ifile, reader = get_reader(DS, cell)
             else:
                 print(f"WARN: Can't handle {dataset.getName()}")
                 continue
